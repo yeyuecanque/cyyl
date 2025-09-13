@@ -1,552 +1,1 @@
-
-
-
-<html>
-
-
- <head> 
-
-
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /> 
-
-
-  <title>FRPS在线配置系统</title> 
-
-
-  <meta name="Keywords" content="内网穿透、frp免费服务器、frpc一键脚本、frps一键脚本、端口映射、frp、frpc、frps、frpc在线配置" /> 
-
-
-  <meta name="description" content="" /> 
-
-
-<style>
-<!---->
-
-.page-header { color: #fff;text-align: center; }
-
-@media screen and (min-width: 42em) {.page-header {padding: 5rem 6rem; } }
-
-@media screen and (min-width: 21em) and (max-width: 64em) {.page-header {padding: 3rem 4rem; } }
-
-@media screen and (max-width: 21em) {.page-header {padding: 2rem 1rem; } }
-
-
-
-<!---->
-
-
-
-<!---->
-
-body {padding: 0;margin: 0 auto;}
-
-#footer {height: 40px;line-height: 40px;position: fixed;bottom: 0;width: 100%;text-align: center;background: #333;color: #fff;font-family: Arial;font-size: 12px;letter-spacing: 1px;}
-
-.content {height: 1800px;width: 100%;text-align: center;}
-
-<!---->
-</style>
-
-
-
-
-
- </head> 
-
-
- <body id="frps_ini"> 
-
-
-  <center> 
-
-
-   <br /> 
-
-
-   <h2 align="center">FRPS在线配置系统</h2> 
-
-
-   <form id="frps_ini"> 
-
-
-    <br /> 
-
-
-    <table border="1"> 
-
-
-     <tbody>
-
-
-	  <tr align="left"> 
-
-
-       <th bgcolor="#66CCCC">FRP版本:</th> 
-
-
-	   <td>
-
-
-			<select name="version" id="version" />
-
-
-				<option value="0.9.3">0.9.3</option>
-
-
-				<option value="0.16.1">0.16.1</option>
-
-
-				<option value="0.24.1">0.24.1</option>
-
-
-			</select>
-
-
-		</td>
-
-
-      </tr>
-
-
-      <tr align="left"> 
-
-
-       <th bgcolor="#66CCCC">服务器IP:</th> 
-
-
-       <td><input type="text" value="0.0.0.0" name="bind_addr" id="bind_addr" placeholder="建议使用0.0.0.0" />保持默认值</td> 
-
-
-      </tr> 
-
-
-      <tr align="left"> 
-
-
-       <th bgcolor="#66CCCC">服务器端口:</th> 
-
-
-       <td><input type="number" value="7000" name="bind_port" id="bind_port" min=1 max=65535 /> </td> 
-
-
-      </tr> 
-
-
-      <tr align="left"> 
-
-
-       <th bgcolor="#66CCCC">特权密码：</th> 
-
-
-       <td><input type="text" value="frp888" name="privilege_token" id="privilege_token" /></td> 
-
-
-      </tr> 
-
-
-      <tr align="left"> 
-
-
-       <th bgcolor="#66CCCC">http服务端口:</th> 
-
-
-       <td><input type="number" value="80" name="vhost_http_port" id="vhost_http_port" min=1 max=65535 /> </td> 
-
-
-      </tr> 
-
-
-      <tr align="left"> 
-
-
-       <th bgcolor="#66CCCC">https服务端口:</th> 
-
-
-       <td><input type="number" value="443" name="vhost_https_port" id="vhost_https_port" min=1 max=65535 /> </td> 
-
-
-      </tr> 
-
-
-      <tr align="left"> 
-
-
-       <th bgcolor="#66CCCC">状态查询端口:</th> 
-
-
-       <td><input type="number" value="7500" name="dashboard_port" id="dashboard_port" min=1 max=65535 /> </td> 
-
-
-      </tr> 
-
-
-      <tr align="left"> 
-
-
-       <th bgcolor="#66CCCC">状态查询用户名:</th> 
-
-
-       <td><input type="text" value="admin" name="dashboard_user" id="dashboard_user" /> </td> 
-
-
-      </tr> 
-
-
-      <tr align="left"> 
-
-
-       <th bgcolor="#66CCCC">状态查询密码:</th> 
-
-
-       <td><input type="text" value="admin" name="dashboard_pwd" id="dashboard_pwd" /> </td> 
-
-
-      </tr> 
-
-
-      <tr align="left"> 
-
-
-       <th bgcolor="#66CCCC">端口开放范围:</th> 
-
-
-       <td><input type="text" value="1-65535" name="privilege_allow_ports" id="privilege_allow_ports" min=1 max=65535 /> </td> 
-
-
-      </tr> 
-
-
-     </tbody>
-
-
-    </table> &nbsp; 
-
-
-    <div align="center"> 
-
-
-     <input name="down" type="button" onclick="down_ini()" value="查看并下载配置文件" /> 
-
-
-    </div>  
-
-
-   </form> 
-
-
-  </center> 
-
-
-  <script language="javascript">
-
-
-
-
-
-function down_ini(){
-
-
-
-
-
-//提示信息
-
-
-alert("1、检查生成的配置文件是否正确。\r" +
-
-
-"2、确认配置文件完全正确后，下载配置文件！\r"
-
-
- );
-
-
-
-
-
-
-
-
-
-
-
-//表格信息处理
-
-
-
-
-
-var bind_addr=document.getElementById("bind_addr").value;
-
-
-var bind_port=document.getElementById("bind_port").value;
-
-
-var privilege_token=document.getElementById("privilege_token").value;
-
-
-var vhost_http_port=document.getElementById("vhost_http_port").value;
-
-
-var vhost_https_port=document.getElementById("vhost_https_port").value;
-
-
-var dashboard_port=document.getElementById("dashboard_port").value;
-
-
-var dashboard_user=document.getElementById("dashboard_user").value;
-
-
-var dashboard_pwd=document.getElementById("dashboard_pwd").value;
-
-
-var privilege_allow_ports=document.getElementById("privilege_allow_ports").value;
-
-
-
-
-
-var version=document.getElementById("version").value;
-
-
-var privilegetoken;
-
-
-var privilegemode;
-
-
-var useencryption;
-
-
-var usecompression;
-
-
-
-
-
-if (version == "0.9.3") {
-
-
-	privilege = "privilege_";
-
-
-	privilegemode = "privilege_mode = true" + "\r";
-
-
-
-
-
-} else if (version == "0.16.1") {
-
-
-	privilege = "privilege_";
-
-
-	privilegemode = "";
-
-
-
-
-
-} else if (version == "0.24.1") {
-
-
-	privilege = "";
-
-
-	privilegemode = "";
-
-
-
-
-
-} else {
-
-
-	privilege = "";
-
-
-	privilegemode = "";
-
-
-
-
-
-};
-
-
-
-
-
-var s="[common]" +"\r\n" +
-
-
-"bind_addr = " + bind_addr +"\r\n" +
-
-
-"bind_port = " + bind_port +"\r\n" +
-
-
-"bind_udp_port = 7001 " +"\r\n" +
-
-
-"kcp_bind_port = " + bind_port +"\r\n" +
-
-
-"vhost_http_port = " + vhost_http_port +"\r\n" +
-
-
-"vhost_https_port = " + vhost_https_port +"\r\n" +
-
-
-"dashboard_port = " + dashboard_port +"\r\n" +
-
-
-"dashboard_user = " + dashboard_user +"\r\n" +
-
-
-"dashboard_pwd = " + dashboard_pwd +"\r\n" +
-
-
-privilege + "allow_ports = " + privilege_allow_ports +"\r\n" +
-
-
-privilegemode +
-
-
-privilege + "token = " + privilege_token +"\r\n" +
-
-
-"log_max_days = 7 " +"\r\n" +
-
-
-"max_pool_count = 100 " +"\r\n" +
-
-
-"log_level = info " +"\r\n" +
-
-
-"log_file = frps.log " +"\r\n" +
-
-
-"\r\n"
-
-
-;
-
-
-
-
-
-//生成下载页面
-
-
-
-
-
-
-
-
-document.write("<p align=center><br><input type=button value=下载frps.ini文件></p>"+"\r\n");
-
-
-document.write("<p align=center>"+"\r\n"+"<textarea rows=20 cols=45 >"+"\r\n"+s+"</textarea>"+"\r\n"+"</p>"+"\r\n");
-
-
-document.write("<script src=http://www.lu8.win/js/frps.js><\/script>");
-
-
-
-
-
-}
-
-
-
-
-
-
-
-
-
-
-
-</script>  
-
-
- </body>
-
-<!---->
-
-<div id="footer">
-
-<table width="980" height="35" border="0" align="center">
-
-<tr>
-
-<td>
-
-友情链接：
-
-&nbsp;&nbsp;<a target="_blank" href="https://www.clwl.online/">沉沦云博客</a>
-
-&nbsp;&nbsp;<script type="text/javascript" src="https://s4.cnzz.com/z_stat.php?id=1279342709&web_id=1279342709"></script>
-
- &nbsp;&nbsp;<a> 
-
- <font color="#0000FF">本站已勉强维持运行</font>
-
- <font color="#0000FF">[</font>
-
- <SPAN id=span_dt_dt style="color: black"></SPAN> 
-
- <SCRIPT language=javascript>function show_date_time(){
-
-window.setTimeout("show_date_time()", 1000);
-
-BirthDay=new Date("7/15/2020 00:00:00");
-
-today=new Date();
-
-timeold=(today.getTime()-BirthDay.getTime());
-
-sectimeold=timeold/1000
-
-secondsold=Math.floor(sectimeold);
-
-msPerDay=24*60*60*1000
-
-e_daysold=timeold/msPerDay
-
-daysold=Math.floor(e_daysold);
-
-e_hrsold=(e_daysold-daysold)*24;
-
-hrsold=Math.floor(e_hrsold);
-
-e_minsold=(e_hrsold-hrsold)*60;
-
-minsold=Math.floor((e_hrsold-hrsold)*60);
-
-seconds=Math.floor((e_minsold-minsold)*60);
-
-span_dt_dt.innerHTML='<font style=color:#FF0000>'+daysold+'</font> 天 <font style=color:#FF0000>'+hrsold+'</font> 时 <font style=color:#FF0000>'+minsold+'</font> 分 <font style=color:#FF0000>'+seconds+'</font> 秒';}
-
-show_date_time();</script>
-
-<font color="#0000FF">]</font>
-
-</a>
-
-</td>
-
-</tr>
-
-</table>
-
-</div>
-
-<!---->
-</html>
-
-
+<html> <head>   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />   <title>FRPS在线配置系统</title>   <meta name="Keywords" content="内网穿透、frp免费服务器、frpc一键脚本、frps一键脚本、端口映射、frp、frpc、frps、frpc在线配置" />   <meta name="description" content="" /> <style><!---->.page-header { color: #fff;text-align: center; }@media screen and (min-width: 42em) {.page-header {padding: 5rem 6rem; } }@media screen and (min-width: 21em) and (max-width: 64em) {.page-header {padding: 3rem 4rem; } }@media screen and (max-width: 21em) {.page-header {padding: 2rem 1rem; } }<!----><!---->body {padding: 0;margin: 0 auto;}#footer {height: 40px;line-height: 40px;position: fixed;bottom: 0;width: 100%;text-align: center;background: #333;color: #fff;font-family: Arial;font-size: 12px;letter-spacing: 1px;}.content {height: 1800px;width: 100%;text-align: center;}<!----></style> </head>  <body id="frps_ini">   <center>    <br />    <h2 align="center">FRPS在线配置系统</h2>    <form id="frps_ini">     <br />     <table border="1">      <tbody>	  <tr align="left">        <th bgcolor="#66CCCC">FRP版本:</th> 	   <td>			<select name="version" id="version" />				<option value="0.9.3">0.9.3</option>				<option value="0.16.1">0.16.1</option>				<option value="0.24.1">0.24.1</option>			</select>		</td>      </tr>      <tr align="left">        <th bgcolor="#66CCCC">服务器IP:</th>        <td><input type="text" value="0.0.0.0" name="bind_addr" id="bind_addr" placeholder="建议使用0.0.0.0" />保持默认值</td>       </tr>       <tr align="left">        <th bgcolor="#66CCCC">服务器端口:</th>        <td><input type="number" value="7000" name="bind_port" id="bind_port" min=1 max=65535 /> </td>       </tr>       <tr align="left">        <th bgcolor="#66CCCC">特权密码：</th>        <td><input type="text" value="frp888" name="privilege_token" id="privilege_token" /></td>       </tr>       <tr align="left">        <th bgcolor="#66CCCC">http服务端口:</th>        <td><input type="number" value="80" name="vhost_http_port" id="vhost_http_port" min=1 max=65535 /> </td>       </tr>       <tr align="left">        <th bgcolor="#66CCCC">https服务端口:</th>        <td><input type="number" value="443" name="vhost_https_port" id="vhost_https_port" min=1 max=65535 /> </td>       </tr>       <tr align="left">        <th bgcolor="#66CCCC">状态查询端口:</th>        <td><input type="number" value="7500" name="dashboard_port" id="dashboard_port" min=1 max=65535 /> </td>       </tr>       <tr align="left">        <th bgcolor="#66CCCC">状态查询用户名:</th>        <td><input type="text" value="admin" name="dashboard_user" id="dashboard_user" /> </td>       </tr>       <tr align="left">        <th bgcolor="#66CCCC">状态查询密码:</th>        <td><input type="text" value="admin" name="dashboard_pwd" id="dashboard_pwd" /> </td>       </tr>       <tr align="left">        <th bgcolor="#66CCCC">端口开放范围:</th>        <td><input type="text" value="1-65535" name="privilege_allow_ports" id="privilege_allow_ports" min=1 max=65535 /> </td>       </tr>      </tbody>    </table> &nbsp;     <div align="center">      <input name="down" type="button" onclick="down_ini()" value="查看并下载配置文件" />     </div>     </form>   </center>   <script language="javascript">function down_ini(){//提示信息alert("1、检查生成的配置文件是否正确。\r" +"2、确认配置文件完全正确后，下载配置文件！\r" );//表格信息处理var bind_addr=document.getElementById("bind_addr").value;var bind_port=document.getElementById("bind_port").value;var privilege_token=document.getElementById("privilege_token").value;var vhost_http_port=document.getElementById("vhost_http_port").value;var vhost_https_port=document.getElementById("vhost_https_port").value;var dashboard_port=document.getElementById("dashboard_port").value;var dashboard_user=document.getElementById("dashboard_user").value;var dashboard_pwd=document.getElementById("dashboard_pwd").value;var privilege_allow_ports=document.getElementById("privilege_allow_ports").value;var version=document.getElementById("version").value;var privilegetoken;var privilegemode;var useencryption;var usecompression;if (version == "0.9.3") {	privilege = "privilege_";	privilegemode = "privilege_mode = true" + "\r";} else if (version == "0.16.1") {	privilege = "privilege_";	privilegemode = "";} else if (version == "0.24.1") {	privilege = "";	privilegemode = "";} else {	privilege = "";	privilegemode = "";};var s="[common]" +"\r\n" +"bind_addr = " + bind_addr +"\r\n" +"bind_port = " + bind_port +"\r\n" +"bind_udp_port = 7001 " +"\r\n" +"kcp_bind_port = " + bind_port +"\r\n" +"vhost_http_port = " + vhost_http_port +"\r\n" +"vhost_https_port = " + vhost_https_port +"\r\n" +"dashboard_port = " + dashboard_port +"\r\n" +"dashboard_user = " + dashboard_user +"\r\n" +"dashboard_pwd = " + dashboard_pwd +"\r\n" +privilege + "allow_ports = " + privilege_allow_ports +"\r\n" +privilegemode +privilege + "token = " + privilege_token +"\r\n" +"log_max_days = 7 " +"\r\n" +"max_pool_count = 100 " +"\r\n" +"log_level = info " +"\r\n" +"log_file = frps.log " +"\r\n" +"\r\n";//生成下载页面document.write("<p align=center><br><input type=button value=下载frps.ini文件></p>"+"\r\n");document.write("<p align=center>"+"\r\n"+"<textarea rows=20 cols=45 >"+"\r\n"+s+"</textarea>"+"\r\n"+"</p>"+"\r\n");document.write("<script src=./frps.js><\/script>");}</script>   </body><!----><div id="footer"><table width="980" height="35" border="0" align="center"><tr><td>友情链接：&nbsp;&nbsp;<a target="_blank" href="http://www.cyyl.top/">残月娱乐</a> &nbsp;&nbsp;<a> <font color="#0000FF">本站已勉强维持运行</font> <font color="#0000FF">[</font> <SPAN id=span_dt_dt style="color: black"></SPAN>  <SCRIPT language=javascript>function show_date_time(){window.setTimeout("show_date_time()", 1000);BirthDay=new Date("7/15/2020 00:00:00");today=new Date();timeold=(today.getTime()-BirthDay.getTime());sectimeold=timeold/1000secondsold=Math.floor(sectimeold);msPerDay=24*60*60*1000e_daysold=timeold/msPerDaydaysold=Math.floor(e_daysold);e_hrsold=(e_daysold-daysold)*24;hrsold=Math.floor(e_hrsold);e_minsold=(e_hrsold-hrsold)*60;minsold=Math.floor((e_hrsold-hrsold)*60);seconds=Math.floor((e_minsold-minsold)*60);span_dt_dt.innerHTML='<font style=color:#FF0000>'+daysold+'</font> 天 <font style=color:#FF0000>'+hrsold+'</font> 时 <font style=color:#FF0000>'+minsold+'</font> 分 <font style=color:#FF0000>'+seconds+'</font> 秒';}show_date_time();</script><font color="#0000FF">]</font></a></td></tr></table></div><!----></html>
