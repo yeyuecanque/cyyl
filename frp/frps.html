@@ -29,7 +29,7 @@ body {padding: 0;margin: 0 auto;}
 	  <tr align="left"> 
        <th bgcolor="#66CCCC">FRP版本:</th> 
 	   <td>
-			<select name="version" id="version" >
+			<select name="version" id="version" onchange="togglePortRange()">
 				<option value="0.9.3">0.9.3</option>
 				<option value="0.16.1">0.16.1</option>
 				<option value="0.24.1">0.24.1</option>
@@ -69,7 +69,7 @@ body {padding: 0;margin: 0 auto;}
        <th bgcolor="#66CCCC">状态查询密码:</th> 
        <td><input type="text" value="admin" name="dashboard_pwd" id="dashboard_pwd" /> </td> 
       </tr> 
-      <tr align="left"> 
+      <tr id="portRangeTr" align="left"> 
        <th bgcolor="#66CCCC">端口开放范围:</th> 
        <td><input type="text" value="1-65535" name="privilege_allow_ports" id="privilege_allow_ports" /> </td> 
       </tr> 
@@ -81,6 +81,16 @@ body {padding: 0;margin: 0 auto;}
    </form> 
   </center> 
   <script language="javascript">
+// 切换版本，控制端口开放范围行显示隐藏
+function togglePortRange(){
+    const ver = document.getElementById("version").value;
+    const tr = document.getElementById("portRangeTr");
+    if(ver === "0.52.0"){
+        tr.style.display = "none";
+    }else{
+        tr.style.display = "";
+    }
+}
 // 通用文本下载函数
 function downloadText(content, filename){
     const blob = new Blob([content], {type: 'text/plain'});
@@ -93,7 +103,6 @@ function downloadText(content, filename){
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
 }
-
 function down_ini(){
     var bind_addr=document.getElementById("bind_addr").value;
     var bind_port=document.getElementById("bind_port").value;
@@ -105,7 +114,6 @@ function down_ini(){
     var dashboard_pwd=document.getElementById("dashboard_pwd").value;
     var privilege_allow_ports=document.getElementById("privilege_allow_ports").value;
     var version=document.getElementById("version").value;
-
     // ========== 新版 TOML frps.toml (>=0.52.0) ==========
     if(version === "0.52.0"){
         alert("当前选择 FRP v0.52.0+，将生成 frps.toml");
@@ -125,7 +133,6 @@ webServer.password = "${dashboard_pwd}"`;
         alert("==== frps.toml 预览 ====\n" + toml);
         return;
     }
-
     // ========== 原有INI生成逻辑（旧版本，保持原样） ==========
     alert("当前选择旧版FRP，生成 frps.ini\r\n"+
     "1、检查生成的配置文件是否正确。\r" +
@@ -167,6 +174,8 @@ webServer.password = "${dashboard_pwd}"`;
     downloadText(s, "frps.ini");
     alert("==== frps.ini 预览 ====\n" + s);
 }
+// 页面加载初始化执行一次，默认不隐藏
+togglePortRange();
 </script>  
  </body>
 <!---->
